@@ -1,7 +1,7 @@
 /**
  *
  * @param name {string} The name of Logging
- * @param args {any} The arguments to stringify
+ * @param [args] {*} The arguments to stringify
  */
 export function info(name: string, args?: any): void {
   const current = new Date(Date.now()).toISOString();
