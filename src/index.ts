@@ -1,4 +1,6 @@
 import express from 'express';
+import bodyPaser from 'body-parser';
+import { ApolloServer, gql } from 'apollo-server-express';
 
 import 'module-alias/register';
 import 'dotenv/config';
@@ -17,10 +19,20 @@ const initializeExpress = (): void => {
     logger.error(e);
   });
 
+  const typeDefs = gql`
+    # Todo
+  `;
+
+  const resolvers = {
+    // Todo
+  };
+  const apolloServer = new ApolloServer({ typeDefs, resolvers });
+
   const app = express();
 
-  app.use(cors);
+  apolloServer.applyMiddleware({ app, path: '/graphql' });
 
+  app.use(cors);
   app.use('/', routes);
 
   app.use((_req, _res, next) => next(new NotFoundError()));
