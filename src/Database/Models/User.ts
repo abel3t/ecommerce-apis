@@ -1,77 +1,121 @@
 import { model, Schema, Document } from 'mongoose';
 
-import Role from './Role';
+const DOCUMENT_NAME = 'User';
+const COLLECTION_NAME = 'users';
 
-export const DOCUMENT_NAME = 'User';
-export const COLLECTION_NAME = 'users';
-
-export default interface User extends Document {
-  name: string;
-  email?: string;
-  password?: string;
-  profilePicUrl?: string;
-  roles: Role[];
-  verified?: boolean;
-  status?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+interface IRole {
+  name: string,
+  freeShipping: boolean,
+  taxExempt: boolean,
+  active: boolean,
+  minOrderAmount: number,
+  maxOrderAmount: number
 }
 
-const schema = new Schema(
-  {
-    name: {
-      type: Schema.Types.String,
-      required: true,
-      trim: true,
-      maxlength: 100,
-    },
-    email: {
-      type: Schema.Types.String,
-      required: true,
-      unique: true,
-      trim: true,
-      select: false,
-    },
-    password: {
-      type: Schema.Types.String,
-      select: false,
-    },
-    profilePicUrl: {
-      type: Schema.Types.String,
-      trim: true,
-    },
-    roles: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: 'Role',
-        },
-      ],
-      required: true,
-      select: false,
-    },
-    verified: {
-      type: Schema.Types.Boolean,
-      default: false,
-    },
-    status: {
-      type: Schema.Types.Boolean,
-      default: true,
-    },
-    createdAt: {
-      type: Date,
-      required: true,
-      select: false,
-    },
-    updatedAt: {
-      type: Date,
-      required: true,
-      select: false,
-    },
+enum AddressType {
+  HomeApartment,
+  OrganCompany
+}
+
+interface IShoppingCartItem {
+  productId: string,
+  quantity: number,
+  createdAt: Date
+}
+
+class ShippingAddress {
+  address: string;
+  districtTown: string;
+  name: string;
+  phone: string;
+  provinceCity: string;
+  type: AddressType;
+  wardCommune: string;
+}
+
+export default interface User extends Document {
+  name: string,
+  userName: string,
+  email: string,
+  hash: string,
+  salt: string,
+  profilePictureUrl: string,
+  deleted?: boolean,
+  active?: boolean,
+  lastLogin?: Date,
+  lastActivity?: Date,
+  createdAt?: Date,
+  UpdatedAt?: Date,
+  roles: Array<IRole>,
+  shoppingCartItems: Array<IShoppingCartItem>,
+  shippingAddresses: Array<ShippingAddress>
+}
+
+const schema = new Schema({
+  name: {
+    type: Schema.Types.String,
+    trim: true,
+    required: true
   },
-  {
-    versionKey: false,
+  userName: {
+    type: Schema.Types.String,
+    trim: true,
+    required: true
   },
-);
+  email: {
+    type: Schema.Types.String,
+    trim: true,
+    required: true
+  },
+  hash: {
+    type: Schema.Types.String,
+    trim: true,
+    required: true
+  },
+  salt: {
+    type: Schema.Types.String,
+    trim: true,
+    required: true
+  },
+  profilePictureUrl: {
+    type: Schema.Types.String,
+    trim: true,
+    required: true
+  },
+  deleted: {
+    type: Schema.Types.Boolean,
+    default: false
+  },
+  active: {
+    type: Schema.Types.Boolean,
+    default: true
+  },
+  lastLogin: {
+    type: Schema.Types.Date
+  },
+  lastActivity: {
+    type: Schema.Types.Date
+  },
+  createdAt: {
+    type: Schema.Types.Date
+  },
+  UpdatedAt: {
+    type: Schema.Types.Date
+  },
+  shoppingCartItems: [
+    {
+      productId: {
+        type: Schema.Types.String,
+        required: true,
+        ref: 'Product'
+      }
+    }
+  ],
+  shippingAddresses: [
+    {
+      type: ShippingAddress
+    }
+  ]
+});
 
 export const UserModel = model<User>(DOCUMENT_NAME, schema, COLLECTION_NAME);
