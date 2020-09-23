@@ -1,0 +1,20 @@
+extend type Query {
+  createOrder: String
+}
+
+extend type Mutation {
+  register(registerInput: RegisterInput): User!
+}
+
+type User {
+  name: String!
+  userName: String!
+  email: String!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  userName: String!
+  password: String
+}

@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { loadFiles } from '@graphql-tools/load-files';
 import { resolvers } from 'Resolvers';
@@ -10,7 +10,14 @@ export default {
     const { typeDefs, resolvers } = await initializeSchema();
     return new ApolloServer({
       typeDefs,
-      resolvers
+      resolvers,
+      context: ({ req }) => {
+        const token: string = req.headers.authorization || '';
+        if (!token) {
+          throw new AuthenticationError('you must be logged in');
+        }
+        return { name: 'OK' };
+      },
     });
   },
   applyApolloOnExpress: (app: Express, server: ApolloServer) => {
