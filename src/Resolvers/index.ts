@@ -1,9 +1,15 @@
 import { IResolvers } from 'graphql-tools';
 
-import userQueries from './Queries/OrderQueries';
+import Auth from './Auth';
 
 export const resolvers: IResolvers = {
   Query: {
-    ...userQueries
+    ...Auth.Query
+  },
+  Mutation: {
+    ...Auth.Mutation
+  },
+  Subscription: {
+    ...Auth.Subscription
   }
 };
