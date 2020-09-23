@@ -3,6 +3,12 @@ type User {
   age: Int!
 }
 
+type Order {
+  name: String
+}
+
 type Query {
-  getUser: [User]
+  getOrder(name: String): Order
+  createOrder: String
+  getHello: String!
 }

@@ -1,6 +1,6 @@
 import { IResolvers } from 'graphql-tools';
 
-import userQueries from './Queries/UserQueries';
+import userQueries from './Queries/OrderQueries';
 
 export const resolvers: IResolvers = {
   Query: {
