@@ -1,14 +1,15 @@
+import http from 'http';
+
 import dotenv from 'dotenv';
-
-dotenv.config();
-
 import 'module-alias/register';
 
-import http from 'http';
+import logger from 'Core/Logger';
 import { expressServer, apolloServer } from 'Servers';
 
 import connectMongoDB from 'Database/connection';
 import status from 'Controllers/status';
+
+dotenv.config();
 
 apolloServer.createApolloServer().then(server => {
   const app = expressServer.createExpressServer();
@@ -22,7 +23,7 @@ apolloServer.createApolloServer().then(server => {
   server.installSubscriptionHandlers(httpServer);
   httpServer.listen({ port: process.env.PORT || process.env.APP_PORT }, () => {
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`🚀 Server ready at http://localhost:${process.env.PORT || process.env.APP_PORT}${server.graphqlPath}`);
+      logger.info(`Server is running at: http://localhost:${process.env.PORT}/graphql`);
     }
   });
 });

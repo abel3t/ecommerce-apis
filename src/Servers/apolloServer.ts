@@ -17,7 +17,7 @@ export default {
           throw new AuthenticationError('you must be logged in');
         }
         return { name: 'OK' };
-      },
+      }
     });
   },
   applyApolloOnExpress: (app: Express, server: ApolloServer) => {
