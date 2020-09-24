@@ -1,6 +1,6 @@
-import { catchErrors } from 'Core/asyncCatch';
+import { Request, Response, NextFunction } from 'express';
 
-export const cors = catchErrors((_req, res, next) => {
+export const cors = (_req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -13,4 +13,4 @@ export const cors = catchErrors((_req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
   next();
-});
+};
