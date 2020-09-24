@@ -2,9 +2,10 @@
 
 import mongoose from 'mongoose';
 
+import logger from 'Core/Logger';
+
 function connectMongoDB() {
   const MONGO_URL: string = process.env.MONGO_URL || '';
-  console.log(MONGO_URL);
   mongoose.connect(
     MONGO_URL,
     {
@@ -14,8 +15,8 @@ function connectMongoDB() {
       useCreateIndex: true
     })
     .then(
-      () => console.log('Database is Connected!'),
-      () => console.log('Can\'t connect to the Database')
+      () => logger.info('Database is Connected!'),
+      () => logger.info('Can\'t connect to the Database')
     );
 }
 
