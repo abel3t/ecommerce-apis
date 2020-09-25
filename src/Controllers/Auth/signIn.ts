@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 
-import { IUser } from '../../Database/Interfaces';
 import { User } from 'Database/Models';
-import { WRONG_EMAIL_PASSWORD } from 'Core/Constant/clientError';
+import { WRONG_EMAIL_PASSWORD } from 'Core/Constant';
+import { generateJwt } from 'Core/Jwt';
 
 interface ISignInInput {
   email: string,
@@ -10,13 +10,24 @@ interface ISignInInput {
 }
 
 export async function signIn(_: any, { email, password }: ISignInInput) {
-  const existedUser = <IUser>await User.signInWithEmailAndPassword(email.toLowerCase());
+  const existedUser = await User.signInWithEmailAndPassword(email.toLowerCase());
   const { hash, salt } = existedUser;
   if (!isEqualPassword(password, hash, salt)) {
     throw new Error(WRONG_EMAIL_PASSWORD);
   }
+  
+  const token = generateJwt({
+    userId: existedUser._id,
+    role: existedUser.role
+  });
 
-  return existedUser;
+  return {
+    name: existedUser.name,
+    email: existedUser.email,
+    userName: existedUser.userName,
+    role: existedUser.role,
+    token
+  };
 }
 
 function isEqualPassword(password: string, hash: string, salt: string) {
