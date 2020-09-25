@@ -1,4 +1,5 @@
 import { register } from 'Controllers/Auth';
+import { signIn } from 'Controllers/Auth';
 
 export default {
   Query: {
@@ -7,6 +8,7 @@ export default {
   Mutation: {
     hello,
     register,
+    signIn
   },
   Subscription: {
     hello

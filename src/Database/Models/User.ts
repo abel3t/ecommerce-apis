@@ -2,6 +2,7 @@ import { model, Schema } from 'mongoose';
 
 import { IUser } from 'Database/Interfaces';
 import logger from 'Core/Logger';
+import { SAVE_USER_ERROR, USER_EXISTED, WRONG_EMAIL_PASSWORD } from 'Core/Constant/clientError';
 
 const schema = new Schema<IUser>({
   name: { type: Schema.Types.String, trim: true, required: true },
@@ -19,13 +20,9 @@ const schema = new Schema<IUser>({
   shoppingCartItems: [
     {
       productId: {
-        type: Schema.Types.String,
-        trim: true,
-        required: true,
-        ref: 'Product'
-      }
-    }
-  ],
+        type: Schema.Types.String, trim: true, required: true, ref: 'Product',
+      },
+    } ],
   shippingAddresses: [
     {
       address: { type: Schema.Types.String, trim: true },
@@ -34,22 +31,20 @@ const schema = new Schema<IUser>({
       phone: { type: Schema.Types.String, trim: true },
       provinceCity: { type: Schema.Types.String, trim: true },
       type: { type: Schema.Types.String, enum: [ 0, 1 ] },
-      wardCommune: { type: Schema.Types.String, trim: true }
-    }
-  ]
+      wardCommune: { type: Schema.Types.String, trim: true },
+    } ],
 });
 
 export default class User {
   protected static readonly _schema = model('User', schema, 'Users');
 
-  public static async createUser(user: IUser): Promise<IUser | null> {
+  public static async createUser(user: IUser): Promise<IUser> {
     const existedUser = await this._schema.findOne({
-      email: user.email,
-      active: true
+      email: user.email, active: true,
     });
 
     if (existedUser) {
-      throw new Error('User is existed!');
+      throw new Error(USER_EXISTED);
     }
 
     let result: any;
@@ -57,10 +52,21 @@ export default class User {
       .then(data => result = data as IUser)
       .catch(error => {
         logger.info(error);
-        throw new Error('Save user error!');
+        throw new Error(SAVE_USER_ERROR);
       });
 
     return result;
+  }
+
+  public static async signInWithEmailAndPassword(email: string): Promise<IUser> {
+    const existedUser = await this._schema.findOne({
+      email,
+      active: true,
+    }) as IUser | null;
+    if (!existedUser) {
+      throw Error(WRONG_EMAIL_PASSWORD);
+    }
+    return existedUser;
   }
 
   private static save(user: IUser): Promise<IUser> {
@@ -70,12 +76,5 @@ export default class User {
         .then((data: any) => resolve(data))
         .catch(error => reject(error));
     });
-  }
-
-  public static async findOneByEmail(email: string): Promise<IUser | null> {
-    return await this._schema.findOne({
-      email,
-      active: true
-    }) as IUser | null;
   }
 }
