@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 
 import { IUser } from 'Database/Interfaces';
 import logger from 'Core/Logger';
-import { SAVE_USER_ERROR, USER_EXISTED, WRONG_EMAIL_PASSWORD } from 'Core/Constant';
+import { SAVE_USER_ERROR, USER_EXISTED, WRONG_EMAIL_PASSWORD } from 'Constants';
 
 const schema = new Schema<IUser>({
   name: { type: Schema.Types.String, trim: true, required: true },

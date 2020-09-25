@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 import { User } from 'Database/Models';
-import { WRONG_EMAIL_PASSWORD } from 'Core/Constant';
+import { WRONG_EMAIL_PASSWORD } from 'Constants';
 import { generateJwt } from 'Core/Jwt';
 
 interface ISignInInput {
@@ -15,7 +15,7 @@ export async function signIn(_: any, { email, password }: ISignInInput) {
   if (!isEqualPassword(password, hash, salt)) {
     throw new Error(WRONG_EMAIL_PASSWORD);
   }
-  
+
   const token = generateJwt({
     userId: existedUser._id,
     role: existedUser.role
