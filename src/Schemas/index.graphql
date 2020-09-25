@@ -1,11 +1,22 @@
+directive @auth(
+    requiredRole: Role!,
+) on FIELD_DEFINITION
+
+enum Role {
+    Admin
+    Guests
+    Vendors
+    Staff
+}
+
 type Query {
-  hello: String!
+    hello: String!
 }
 
 type Mutation {
-  hello: String!
+    hello: String!
 }
 
 type Subscription {
-  hello: String!
+    hello: String!
 }
