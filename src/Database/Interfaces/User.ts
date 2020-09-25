@@ -8,6 +8,7 @@ export enum AddressTypes {
 
 //region Interfaces
 export interface IUser {
+  _id?: string,
   name: string,
   userName: string,
   email: string,
@@ -20,18 +21,9 @@ export interface IUser {
   lastActivity?: Date,
   createdAt?: Date,
   UpdatedAt?: Date,
-  roles?: Array<IRole>,
+  role?: string,
   shoppingCartItems?: Array<IShoppingCartItem>,
   shippingAddresses?: Array<IShippingAddress>
-}
-
-interface IRole {
-  name: string,
-  freeShipping?: boolean,
-  taxExempt?: boolean,
-  active?: boolean,
-  minOrderAmount?: number,
-  maxOrderAmount?: number
 }
 
 interface IShoppingCartItem {

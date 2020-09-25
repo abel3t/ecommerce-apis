@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 
 import { IUser } from 'Database/Interfaces';
 import logger from 'Core/Logger';
-import { SAVE_USER_ERROR, USER_EXISTED, WRONG_EMAIL_PASSWORD } from 'Core/Constant/clientError';
+import { SAVE_USER_ERROR, USER_EXISTED, WRONG_EMAIL_PASSWORD } from 'Core/Constant';
 
 const schema = new Schema<IUser>({
   name: { type: Schema.Types.String, trim: true, required: true },
@@ -17,6 +17,7 @@ const schema = new Schema<IUser>({
   lastActivity: { type: Schema.Types.Date },
   createdAt: { type: Schema.Types.Date },
   UpdatedAt: { type: Schema.Types.Date },
+  role: { type: Schema.Types.String },
   shoppingCartItems: [
     {
       productId: {
