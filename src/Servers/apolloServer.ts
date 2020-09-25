@@ -1,15 +1,16 @@
+import path from 'path';
+
+import { Express } from 'express';
+
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { loadFiles } from '@graphql-tools/load-files';
 import { resolvers } from 'Resolvers';
-import { Express } from 'express';
-import path from 'path';
 
 export default {
   createApolloServer: async () => {
-    const { typeDefs, resolvers } = await initializeSchema();
     return new ApolloServer({
-      typeDefs,
+      typeDefs: await createTypeDef(),
       resolvers,
       context: ({ req }) => {
         const token: string = req.headers.authorization || '';
@@ -25,15 +26,10 @@ export default {
   },
 };
 
-async function initializeSchema() {
+async function createTypeDef() {
   const getTypeDefs = async () => {
     return loadFiles(path.join(__dirname, '../Schemas/*.graphql'));
   };
 
-  const typeDefs = mergeTypeDefs(await getTypeDefs());
-
-  return {
-    typeDefs,
-    resolvers
-  };
+  return mergeTypeDefs(await getTypeDefs());
 }
