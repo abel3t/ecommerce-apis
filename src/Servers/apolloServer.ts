@@ -9,7 +9,7 @@ import { ApolloServer, AuthenticationError, SchemaDirectiveVisitor } from 'apoll
 import { resolvers } from 'Resolvers';
 import { verifyToken } from 'Core/Jwt';
 import { ROLES } from 'Core/Constants/common';
-import { INVALID_TOKEN } from 'Constants';
+import { INVALID_TOKEN } from 'Core/Constants';
 
 export default {
   createApolloServer: async () => {

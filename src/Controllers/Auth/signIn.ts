@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 import { User } from 'Database/Models';
-import { WRONG_EMAIL_PASSWORD } from 'Constants';
+import { WRONG_EMAIL_PASSWORD } from 'Core/Constants';
 import { generateJwt } from 'Core/Jwt';
 
 interface ISignInInput {
