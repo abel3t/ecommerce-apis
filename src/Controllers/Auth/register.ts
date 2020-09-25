@@ -10,16 +10,14 @@ interface IRegisterInput {
   password: string
 }
 
-export async function register(_: any,
-  { registerInput: { name, userName, email, password } }: { registerInput: IRegisterInput }
-): Promise<IUser | null> {
+export async function register(_: any, { name, userName, email, password }: IRegisterInput): Promise<IUser | null> {
 
   const salt: string = crypto.randomBytes(16).toString('hex');
   const hash: string = crypto.pbkdf2Sync(password, salt, 10000, 512, 'sha512').toString('hex');
   const user: IUser = {
     name,
     userName,
-    email,
+    email: email.toLowerCase(),
     hash,
     salt
   };
