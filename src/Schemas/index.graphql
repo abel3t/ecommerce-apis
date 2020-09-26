@@ -2,6 +2,9 @@ directive @auth(
     requiredRole: Role!,
 ) on FIELD_DEFINITION
 
+directive @LoggedIn
+on FIELD_DEFINITION
+
 enum Role {
     Admin
     Guests
