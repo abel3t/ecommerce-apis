@@ -1,5 +1,8 @@
-import { register } from 'Controllers/Auth';
-import { signIn } from 'Controllers/Auth';
+import {
+  refreshToken,
+  register,
+  signIn
+} from 'Controllers/Auth';
 
 export default {
   Query: {
@@ -8,7 +11,8 @@ export default {
   Mutation: {
     hello,
     register,
-    signIn
+    signIn,
+    refreshToken
   },
   Subscription: {
     hello
