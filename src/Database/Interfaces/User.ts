@@ -5,10 +5,7 @@ export enum AddressTypes {
 }
 
 //endregion
-
-//region Interfaces
-export interface IUser {
-  _id?: string,
+export interface IUserSignUp {
   name: string,
   userName: string,
   email: string,
@@ -21,7 +18,27 @@ export interface IUser {
   lastActivity?: Date,
   createdAt?: Date,
   UpdatedAt?: Date,
-  role?: string,
+  role: string,
+  shoppingCartItems?: Array<IShoppingCartItem>,
+  shippingAddresses?: Array<IShippingAddress>
+}
+
+//region Interfaces
+export interface IUser {
+  _id: string,
+  name: string,
+  userName: string,
+  email: string,
+  hash: string,
+  salt: string,
+  profilePictureUrl?: string,
+  deleted?: boolean,
+  active?: boolean,
+  lastLogin?: Date,
+  lastActivity?: Date,
+  createdAt?: Date,
+  UpdatedAt?: Date,
+  role: string,
   shoppingCartItems?: Array<IShoppingCartItem>,
   shippingAddresses?: Array<IShippingAddress>
 }

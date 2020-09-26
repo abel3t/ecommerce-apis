@@ -1,1 +1,1 @@
-export { IUser, IShippingAddress } from './User';
+export { IUser, IShippingAddress, IUserSignUp } from './User';

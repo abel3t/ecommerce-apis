@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-import { IUser } from 'Database/Interfaces';
+import { IUser, IUserSignUp } from 'Database/Interfaces';
 import logger from 'Core/Logger';
 import { SAVE_USER_ERROR, USER_EXISTED, WRONG_EMAIL_PASSWORD } from 'Core/Constants';
 
@@ -39,7 +39,7 @@ const schema = new Schema<IUser>({
 export default class User {
   protected static readonly _schema = model('User', schema, 'Users');
 
-  public static async createUser(user: IUser): Promise<IUser> {
+  public static async createUser(user: IUserSignUp): Promise<IUser> {
     const existedUser = await this._schema.findOne({
       email: user.email, active: true,
     });
@@ -48,15 +48,12 @@ export default class User {
       throw new Error(USER_EXISTED);
     }
 
-    let result: any;
-    await this.save(user)
-      .then(data => result = data as IUser)
+    return await this.save(user)
+      .then(data => data as IUser)
       .catch(error => {
         logger.info(error);
         throw new Error(SAVE_USER_ERROR);
       });
-
-    return result;
   }
 
   public static async signInWithEmailAndPassword(email: string): Promise<IUser> {
@@ -70,7 +67,7 @@ export default class User {
     return existedUser;
   }
 
-  private static save(user: IUser): Promise<IUser> {
+  private static save(user: IUserSignUp): Promise<IUser> {
     return new Promise<IUser>((resolve, reject) => {
       const userModel = new this._schema(user);
       userModel.save()
