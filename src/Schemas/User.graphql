@@ -1,3 +1,11 @@
 extend  type Query {
-    me: String! @LoggedIn @auth (requiredRole: Admin)
+    me: Me! @LoggedIn @auth (requiredRole: Guests)
+}
+
+type Me {
+    _id: String!
+    name: String!
+    userName: String!
+    email: String!
+    role: String!
 }

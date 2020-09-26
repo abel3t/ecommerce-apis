@@ -67,6 +67,17 @@ export default class User {
     return existedUser;
   }
 
+  public static async getUserById(userId: string): Promise<IUser> {
+    const existedUser = await this._schema.findOne({
+      _id: userId,
+      active: true,
+    }) as IUser | null;
+    if (!existedUser) {
+      throw Error('User not found!');
+    }
+    return existedUser;
+  }
+
   private static save(user: IUserSignUp): Promise<IUser> {
     return new Promise<IUser>((resolve, reject) => {
       const userModel = new this._schema(user);
