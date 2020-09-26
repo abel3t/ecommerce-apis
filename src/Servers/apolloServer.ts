@@ -7,9 +7,10 @@ import { defaultFieldResolver, GraphQLField } from 'graphql';
 import { ApolloServer, AuthenticationError, SchemaDirectiveVisitor } from 'apollo-server-express';
 
 import { resolvers } from 'Resolvers';
-import { verifyToken } from 'Core/Jwt';
+import { verifyAccessToken } from 'Core/Jwt';
 import { ROLES } from 'Core/Constants/common';
 import { INVALID_TOKEN } from 'Core/Constants';
+import logger from 'Core/Logger';
 
 export default {
   createApolloServer: async () => {
@@ -17,12 +18,18 @@ export default {
       typeDefs: await createTypeDef(),
       resolvers,
       schemaDirectives: {
+        LoggedIn: LoggedInDirective,
         auth: AuthDirective
       },
-      context: ({ req }) => {
+      context: async ({ req }) => {
         const token: string = req.headers.authorization || '';
         if (token) {
-          const user: any = verifyToken(token);
+          const user: any = await verifyAccessToken(token)
+            .then(userToken => userToken)
+            .catch(error => {
+              logger.error(error);
+              return null;
+            });
           if (user) {
             return {
               userToken: {
@@ -52,6 +59,7 @@ async function createTypeDef() {
 class AuthDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field: GraphQLField<any, any>) {
     const { requiredRole = ROLES.GUESTS } = this.args;
+
     const originalResolve = field.resolve || defaultFieldResolver;
 
     field.resolve = async (...args) => {
@@ -60,6 +68,23 @@ class AuthDirective extends SchemaDirectiveVisitor {
 
       if (!isAuthorized) {
         throw new AuthenticationError(`You need following role: ${requiredRole}`);
+      }
+
+      return originalResolve.apply(this, args);
+    };
+  }
+}
+
+class LoggedInDirective extends SchemaDirectiveVisitor {
+  visitFieldDefinition(field: GraphQLField<any, any>) {
+    const originalResolve = field.resolve || defaultFieldResolver;
+
+    field.resolve = async (...args) => {
+      const { userToken = {} } = args[2];
+      const isLoggedIn = !!userToken.role;
+
+      if (!isLoggedIn) {
+        throw new AuthenticationError(`You need LoggedIn`);
       }
 
       return originalResolve.apply(this, args);
