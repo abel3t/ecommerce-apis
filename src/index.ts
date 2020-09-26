@@ -6,7 +6,7 @@ import 'module-alias/register';
 import logger from 'Core/Logger';
 import { expressServer, apolloServer } from 'Servers';
 
-import connectMongoDB from 'Database/connection';
+import { connectMongoDB } from 'Database/connection';
 import status from 'Controllers/status';
 
 dotenv.config();
