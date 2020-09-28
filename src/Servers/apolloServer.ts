@@ -9,7 +9,7 @@ import { ApolloServer, AuthenticationError, SchemaDirectiveVisitor } from 'apoll
 import { resolvers } from 'Resolvers';
 import { verifyAccessToken } from 'Core/Jwt';
 import { ROLES } from 'Core/Constants/common';
-import { INVALID_TOKEN } from 'Core/Constants';
+import { INVALID_TOKEN, YOU_NEED_LOGGED_IN } from 'Core/Constants';
 import logger from 'Core/Logger';
 
 export default {
@@ -84,7 +84,7 @@ class LoggedInDirective extends SchemaDirectiveVisitor {
       const isLoggedIn = !!userToken.role;
 
       if (!isLoggedIn) {
-        throw new AuthenticationError(`You need LoggedIn`);
+        throw new AuthenticationError(YOU_NEED_LOGGED_IN);
       }
 
       return originalResolve.apply(this, args);
