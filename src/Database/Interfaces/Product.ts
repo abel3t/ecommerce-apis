@@ -21,6 +21,7 @@ export interface IProduct {
   sold: number,
   viewed: number,
   onSale: number,
+  status: boolean,
   pictures: Array<string>
 }
 
@@ -63,5 +64,12 @@ export const schema = new Schema<IProduct>({
   sold: { type: Schema.Types.Number },
   viewed: { type: Schema.Types.Number },
   onSale: { type: Schema.Types.Number },
+  status: { type: Schema.Types.Boolean },
   pictures: [ { type: String, trim: true } ]
 });
+
+export interface IProductRegister {
+  name: string,
+  type: string,
+  shortDescription: string,
+}
