@@ -1,5 +1,5 @@
 //region Enums
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose';
 
 export enum AddressTypes {
   HomeApartment,
